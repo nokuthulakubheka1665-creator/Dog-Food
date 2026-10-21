@@ -57,4 +57,6 @@ Review changes before committing and pushing. Do not force-push; fetch and recon
 
 ## Deployment
 
-After replacing demo content and testing the production build, deploy the `dist` output to a static hosting provider such as GitHub Pages, Netlify or Vercel. A deployment does not configure payments, order processing or message delivery; those require separate business and service setup.
+GitHub Actions is configured to build and deploy the site to GitHub Pages after each push to `main`. For the first deployment, open the repository's **Settings → Pages** and choose **GitHub Actions** as the build and deployment source. Check the **Actions** tab for the deployment result; the project site URL will appear in the workflow's deployment summary.
+
+For local builds, run `npm run build`. GitHub Pages builds with a `/Dog-Food/` base path; ordinary local development uses `/`. Deployment does not configure payments, order processing or contact-form message delivery.
