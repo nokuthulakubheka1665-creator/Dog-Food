@@ -93,7 +93,7 @@ function CartPanel({ open, items, customer, setCustomer, onClose, onQuantity, on
       setNotice('Add a product before preparing an order.');
       return;
     }
-    if (!storeDetails.whatsapp) {
+    if (!storeDetails.whatsappLink) {
       setNotice('WhatsApp is not configured yet. Add your business number in src/data/store.js; no order has been sent.');
       return;
     }
@@ -108,7 +108,7 @@ function CartPanel({ open, items, customer, setCustomer, onClose, onQuantity, on
       customer.notes ? `Notes: ${customer.notes}` : '',
       'Please confirm availability, delivery and payment. This is an enquiry, not a payment.',
     ].filter(Boolean).join('\n');
-    const number = storeDetails.whatsapp.replace(/\D/g, '');
+    const number = storeDetails.whatsappLink.replace(/\D/g, '');
     if (number.length < 10) {
       setNotice('Add a valid international WhatsApp number in src/data/store.js; no order has been sent.');
       return;
@@ -294,14 +294,14 @@ function App() {
               ['06', 'We confirm together', 'Availability, delivery and payment are confirmed by the business.'],
             ].map(([number, title, text]) => <li key={number}><span className="step-number">{number}</span><span className="step-icon" aria-hidden="true">{['⌕', '♡', '▤', '⌂', '↗', '✓'][Number(number) - 1]}</span><h3>{title}</h3><p>{text}</p></li>)}
           </ol>
-          <div className="order-caveat"><span aria-hidden="true">ⓘ</span><p>This demo does not take payment or send orders to a server. A WhatsApp number must be configured, and the customer must press Send in WhatsApp.</p></div>
+          <div className="order-caveat"><span aria-hidden="true">ⓘ</span><p>This demo does not take payment or send orders to a server. Review the order enquiry and press Send in WhatsApp to contact the business.</p></div>
         </section>
 
         <section className="contact-section section-pad" id="contact">
-          <div className="contact-copy"><SectionHeading eyebrow="LET'S CHAT" title="We’re all ears." detail="Questions about a product or an order? Send a note. Contact details below are placeholders until the business confirms them." /><div className="contact-details">
-            <div><span>PHONE</span><a href="#contact">{storeDetails.phone}</a></div>
-            <div><span>WHATSAPP</span><a href="#contact">{storeDetails.whatsapp || 'Add WhatsApp number'}</a></div>
-            <div><span>EMAIL</span><a href="#contact">{storeDetails.email}</a></div>
+          <div className="contact-copy"><SectionHeading eyebrow="LET'S CHAT" title="We’re all ears." detail="Questions about a product or an order? Call, WhatsApp or email us. Contact details are supplied by the business." /><div className="contact-details">
+            <div><span>PHONE</span><a href={`tel:${storeDetails.phoneLink}`}>{storeDetails.phone}</a></div>
+            <div><span>WHATSAPP</span><a href={`https://wa.me/${storeDetails.whatsappLink}`} target="_blank" rel="noopener noreferrer">{storeDetails.whatsapp}</a></div>
+            <div><span>EMAIL</span><a href={`mailto:${storeDetails.email}`}>{storeDetails.email}</a></div>
             <div><span>VISIT / DELIVERY</span><p>{storeDetails.address}<br />{storeDetails.deliveryAreas}</p></div>
             <div><span>OPENING HOURS</span><p>{storeDetails.hours}</p></div>
           </div></div>
@@ -318,7 +318,7 @@ function App() {
         </section>
       </main>
       <footer className="site-footer">
-        <div className="footer-main"><div><BrandMark /><p>Good food for good dogs.<br />Made with a whole lot of love.</p></div><div className="footer-links"><span>FIND YOUR WAY</span><a href="#shop">Shop dog food</a><a href="#breeds">Dog breeds</a><a href="#about">About us</a><a href="#how-to-order">How to order</a></div><div className="footer-contact"><span>SAY HELLO</span><p>{storeDetails.phone}<br />{storeDetails.email}<br />{storeDetails.address}</p></div><a href="#home" className="back-top" aria-label="Back to top">↑</a></div>
+        <div className="footer-main"><div><BrandMark /><p>Good food for good dogs.<br />Made with a whole lot of love.</p></div><div className="footer-links"><span>FIND YOUR WAY</span><a href="#shop">Shop dog food</a><a href="#breeds">Dog breeds</a><a href="#about">About us</a><a href="#how-to-order">How to order</a></div><div className="footer-contact"><span>SAY HELLO</span><p><a href={`tel:${storeDetails.phoneLink}`}>{storeDetails.phone}</a><br /><a href={`mailto:${storeDetails.email}`}>{storeDetails.email}</a><br />{storeDetails.address}</p></div><a href="#home" className="back-top" aria-label="Back to top">↑</a></div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} WE LOVE DOGS</span><span>Sample catalogue · Prices in South African rand</span><a href="#home">Back to top ↑</a></div>
       </footer>
       <CartPanel open={cartOpen} items={cartItems} customer={customer} setCustomer={setCustomer} onClose={() => setCartOpen(false)} onQuantity={updateQuantity} onRemove={(id) => updateQuantity(id, 0)} />
