@@ -205,6 +205,7 @@ img { display: block; width: 100%; }
 .contact-form .button { margin-top: 3px; }
 .form-note { margin: 11px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
 .status-message { padding: 10px 12px; background: #e8efe6; color: #254832; font-size: 11px; line-height: 1.55; }
+.required { color: var(--orange); font-weight: 700; }
 .optional { color: var(--muted); font-weight: 400; }
 
 .site-footer { padding: 42px max(32px, calc((100% - 1260px) / 2)) 0; background: #252d24; color: white; }

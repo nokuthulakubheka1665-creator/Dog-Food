@@ -93,6 +93,16 @@ function CartPanel({ open, items, customer, setCustomer, onClose, onQuantity, on
       setNotice('Add a product before preparing an order.');
       return;
     }
+    const missingDetails = [
+      ['name', 'your name'],
+      ['phone', 'your phone number'],
+      ['address', 'your delivery address'],
+    ].filter(([field]) => !customer[field].trim());
+    if (missingDetails.length > 0) {
+      setNotice(`Please enter ${missingDetails.map(([, label]) => label).join(', ')} before preparing your WhatsApp enquiry.`);
+      event.currentTarget.elements.namedItem(missingDetails[0][0]).focus();
+      return;
+    }
     if (!storeDetails.whatsappLink) {
       setNotice('WhatsApp is not configured yet. Add your business number in src/data/store.js; no order has been sent.');
       return;
@@ -102,9 +112,9 @@ function CartPanel({ open, items, customer, setCustomer, onClose, onQuantity, on
       ...items.map(({ product, quantity }) => `${quantity} × ${product.name} (${formatPrice(product.price * quantity)})`),
       `Subtotal: ${formatPrice(subtotal)}`,
       `Estimated total (delivery excluded): ${formatPrice(subtotal)}`,
-      `Name: ${customer.name}`,
-      `Phone: ${customer.phone}`,
-      `Delivery address: ${customer.address}`,
+      `Name: ${customer.name.trim()}`,
+      `Phone: ${customer.phone.trim()}`,
+      `Delivery address: ${customer.address.trim()}`,
       customer.notes ? `Notes: ${customer.notes}` : '',
       'Please confirm availability, delivery and payment. This is an enquiry, not a payment.',
     ].filter(Boolean).join('\n');
@@ -144,9 +154,10 @@ function CartPanel({ open, items, customer, setCustomer, onClose, onQuantity, on
             <p className="cart-disclaimer">Delivery is not included. Final availability, delivery and any applicable charges are confirmed by the business. Prices shown are demonstration data.</p>
             <form className="order-form" onSubmit={submitOrder}>
               <h3>Order enquiry</h3>
-              <label>Your name<input required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label>
-              <label>Phone number<input required type="tel" autoComplete="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label>
-              <label>Delivery address<textarea required autoComplete="street-address" rows="2" value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} /></label>
+              <p className="form-note">Your details are required to prepare the WhatsApp enquiry.</p>
+              <label>Your name <span className="required">(required)</span><input name="name" required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label>
+              <label>Phone number <span className="required">(required)</span><input name="phone" required type="tel" autoComplete="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label>
+              <label>Delivery address <span className="required">(required)</span><textarea name="address" required autoComplete="street-address" rows="2" value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} /></label>
               <label>Order notes <span className="optional">(optional)</span><textarea rows="2" value={customer.notes} onChange={(event) => setCustomer({ ...customer, notes: event.target.value })} /></label>
               <button className="button button-dark full-button" type="submit">Prepare WhatsApp enquiry <span aria-hidden="true">↗</span></button>
               <p className="form-note">No payment is taken and no order is confirmed here. You will review and send the message in WhatsApp.</p>
